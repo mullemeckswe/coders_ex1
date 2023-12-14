@@ -1,27 +1,33 @@
 /**
- * Kör frammåt på vitt underlag och stannar vid svart streck
+ * Vänta på knapptryck
  */
 input.onButtonPressed(Button.A, function () {
     Run = 1
+    basic.showIcon(IconNames.Happy)
 })
 input.onButtonPressed(Button.B, function () {
     Run = 0
+    basic.showIcon(IconNames.Sad)
     Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
 })
 let Run = 0
+basic.showIcon(IconNames.Yes)
 Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
 /**
- * Vänta på knapptryck
+ * Kör frammåt på vitt underlag och stannar vid svart streck
  */
 basic.forever(function () {
     while (!(Run)) {
         basic.pause(100)
-        basic.showIcon(IconNames.SmallHeart)
     }
-    basic.showIcon(IconNames.Happy)
-    if (Tinybit.Line_Sensor(Tinybit.enPos.RightState, Tinybit.enLineState.White)) {
-        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_Run, 30)
+    if (Tinybit.Line_Sensor(Tinybit.enPos.LeftState, Tinybit.enLineState.Black) && Tinybit.Line_Sensor(Tinybit.enPos.RightState, Tinybit.enLineState.White)) {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_SpinLeft, 50)
     } else {
-        Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_Run, 50)
+    }
+    if (Tinybit.Line_Sensor(Tinybit.enPos.RightState, Tinybit.enLineState.Black) && Tinybit.Line_Sensor(Tinybit.enPos.LeftState, Tinybit.enLineState.White)) {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_SpinRight, 50)
+    } else {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_Run, 50)
     }
 })
